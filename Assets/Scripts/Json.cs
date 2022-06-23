@@ -13,12 +13,10 @@ public class Serialization<T>
 }
 public static class Json
 {
-    const string Path = "/Resources/";
-    static string GetPath(string name) => $"{Application.dataPath}/Resources/{name}";
     public static void Save<SaveType>(SaveType writeType, string name)
     {
         string json = JsonUtility.ToJson(writeType);
-        File.WriteAllText($"{GetPath(name)}.json", json);
+        File.WriteAllText($"{Application.dataPath}/Resources/{name}.json", json);
     }
 
     public static LoadType Load<LoadType>(string name)
