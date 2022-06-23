@@ -1,25 +1,36 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
 
-
+[Serializable]
+public struct Test
+{
+    public List<string> names;
+}
+[Serializable]
+public struct Tests
+{
+    public List<Test> tests;
+}
 public class ClassManager : MonoBehaviour
 {
+    const string DAY = "Day";
     [SerializeField] Transform SubjectParent;
     [SerializeField] GameObject SubjectPrefab;
 
     [SerializeField] Text TodayDate;
 
+    Test test;
+    Tests tests;
     /// <summary>
     /// 6교시인 날인 경우 꺼줌
     /// </summary>
-    [SerializeField] GameObject SeventhClass;
-
-    Subject Subject;
+    [SerializeField] GameObject SeventhClassobj;
+    public List<Subject> subjects;
     int daynum;
+
     void Start()
     {
         #region Date Set
@@ -27,65 +38,95 @@ public class ClassManager : MonoBehaviour
 
         DateTime nowDt = DateTime.Now;
 
-        string dotw = "";
+        string dayofweek = "";
 
         switch (nowDt.DayOfWeek)
         {
             case DayOfWeek.Monday:
-                dotw = "월요일";
+                dayofweek = "월요일";
                 break;
             case DayOfWeek.Tuesday:
-                dotw = "화요일";
+                dayofweek = "화요일";
                 break;
             case DayOfWeek.Wednesday:
-                dotw = "수요일";
+                dayofweek = "수요일";
                 break;
             case DayOfWeek.Thursday:
-                dotw = "목요일";
+                dayofweek = "목요일";
                 break;
             case DayOfWeek.Friday:
-                dotw = "금요일";
+                dayofweek = "금요일";
                 break;
             case DayOfWeek.Saturday:
-                dotw = "토요일";
+                dayofweek = "토요일";
                 break;
             case DayOfWeek.Sunday:
-                dotw = "일요일";
+                dayofweek = "일요일";
                 break;
             default:
                 break;
         }
 
-        TodayDate.text = $@"{today.Month} / {today.Day} {dotw}";
+        TodayDate.text = $@"{today.Month} / {today.Day} {dayofweek}";
         #endregion
 
-        var subjects = Json.LoadList<Subject>("Subject");
+        subjects = Json.LoadList<Subject>("Subject");
 
-        Subject = subjects[0];
-        int daynum = (int)nowDt.DayOfWeek;
+        daynum = (int)nowDt.DayOfWeek;
 
+        if (daynum == (int)DayOfWeek.Wednesday)
+        {
+            SeventhClassobj.SetActive(false);
+            for (int i = 0; i < 6; i++)
+            {
+                Text text = Instantiate(SubjectPrefab, SubjectParent).GetComponentInChildren<Text>();
 
+                text.text = subjects[daynum - 1].SubjectInfo[i];
+            }
+        }
+        else
+        {
+            for (int i = 0; i < 7; i++)
+            {
+                Text text = Instantiate(SubjectPrefab, SubjectParent).GetComponentInChildren<Text>();
+
+                text.text = subjects[daynum - 1].SubjectInfo[i];
+            }
+        }
+    }
+
+    void Update()
+    {
         if (Input.GetKeyDown(KeyCode.S))
         {
             daynum++;
+            daynum = Mathf.Clamp(daynum, 1, 6);
             if (daynum == (int)DayOfWeek.Wednesday)
             {
-                SeventhClass.SetActive(false);
+                SeventhClassobj.SetActive(false);
                 for (int i = 0; i < 6; i++)
                 {
-                    //Text text = Instantiate(Subject, SubjectParent).GetComponent<Text>();
+                    Text text = Instantiate(SubjectPrefab, SubjectParent).GetComponentInChildren<Text>();
 
-                    //text.text = [daynum].dad[i];
+                    text.text = subjects[daynum - 1].SubjectInfo[i];
+                }
+            }
+            else
+            {
+                for (int i = 0; i < 7; i++)
+                {
+                    Text text = Instantiate(SubjectPrefab, SubjectParent).GetComponentInChildren<Text>();
+
+                    text.text = subjects[daynum - 1].SubjectInfo[i];
                 }
             }
 
         }
 
-
     }
 
-    void Update()
+    void OnApplicationQuit()
     {
-
+        print("d");
     }
 }
