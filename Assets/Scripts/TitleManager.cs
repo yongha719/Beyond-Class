@@ -17,9 +17,11 @@ public class TitleManager : MonoBehaviour
     /// </summary>
     [SerializeField] GameObject SeventhClassobj;
     int daynum;
+    public Subjects testsubjects;
 
     void Start()
     {
+
         #region Date Set
         DateTime today = DateTime.Today;
 
@@ -59,8 +61,10 @@ public class TitleManager : MonoBehaviour
 
         // Set TimeTable
         subjects = Json.LoadList<Subject>("Subject");
-
         daynum = (int)nowDt.DayOfWeek;
+
+        var subjectslist = Json.LoadList<Subjects>("Subjects");
+        testsubjects = subjectslist[0];
 
         Text subjecttext;
 
