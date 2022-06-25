@@ -87,6 +87,8 @@ public class TitleManager : MonoBehaviour
                 subjecttext.text = subjects[daynum - 1].SubjectInfo[i];
             }
         }
+
+        CSV.Load("TimeTable");
     }
 
     void OnApplicationQuit()
