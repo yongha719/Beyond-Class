@@ -3,25 +3,26 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class TitleManager : MonoBehaviour
+public class TimeTable : MonoBehaviour
 {
-    public List<Subject> subjects;
+    private List<Subject> subjects;
 
-    [SerializeField] Transform SubjectParent;
-    [SerializeField] GameObject SubjectPrefab;
+    [SerializeField] private Transform SubjectParent;
+    [SerializeField] private GameObject SubjectPrefab;
 
-    [SerializeField] Text TodayDate;
+    [SerializeField] private Text TodayDate;
 
     /// <summary>
     /// 6교시인 날인 경우 꺼줌
     /// </summary>
-    [SerializeField] GameObject SeventhClassobj;
+    [SerializeField] private GameObject SeventhClassobj;
     int daynum;
     public Subjects testsubjects;
 
     void Start()
     {
-
+        //TODO - 2022-07-08 박용하
+        //하드코딩한거 다 바꾸기
         #region Date Set
         DateTime today = DateTime.Today;
 
@@ -56,7 +57,7 @@ public class TitleManager : MonoBehaviour
                 break;
         }
 
-        TodayDate.text = $@"{today.Month} / {today.Day} {dayofweek}";
+        //TodayDate.text = $@"{today.Month} / {today.Day} {dayofweek}";
         #endregion
 
         // Set TimeTable
@@ -64,7 +65,6 @@ public class TitleManager : MonoBehaviour
         daynum = (int)nowDt.DayOfWeek;
 
         var subjectslist = Json.LoadList<Subjects>("Subjects");
-        testsubjects = subjectslist[0];
 
         Text subjecttext;
 
@@ -87,8 +87,6 @@ public class TitleManager : MonoBehaviour
                 subjecttext.text = subjects[daynum - 1].SubjectInfo[i];
             }
         }
-
-        CSV.Load("TimeTable");
     }
 
     void OnApplicationQuit()
